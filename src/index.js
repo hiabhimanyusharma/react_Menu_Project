@@ -1,17 +1,38 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import menu from './data'
+import Categories from './Categories'
+import Items from './Items'
+
+const type = ['all', ...new Set(menu.map((item)=>{
+  return item.category;
+}))]
+
+const Container = () => {
+  const [menuItems,setMenuItems] = useState(menu);
+  const [categories,setCategories] = useState(type);
+
+  const change = (category) => {
+    if(category==="all") {
+      setMenuItems(menu);
+    }else {
+      const newMenu = menu.filter((item)=>{
+        return item.category === category
+      })
+    setMenuItems(newMenu);
+    }
+  }
+
+  return (
+    <div className="container">
+      <h1 className="jumbotron">Our Menu</h1>
+      <Categories categories={categories} change={change} />
+      <Items menuItems={menuItems}/>
+    </div>
+  );
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Container/>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
